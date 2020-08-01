@@ -12,9 +12,9 @@ ENV MONERO_BINARY "https://downloads.getmonero.org/cli/monero-linux-x64-v0.16.0.
 ENV GPGKEY_HASH "7dcb19c87d41a4399b4877054111f7dbfd30531545678bc2be218bd56903904c  binaryfate.asc"
 
 LABEL org.opencontainers.image.authors "Andrés J. Díaz <ajdiaz@ajdiaz.me>"
-LABEL org.opencontainers.image.source "https://github.com/ajdiaz/container-files/blob/master/monero-gui"
+LABEL org.opencontainers.image.source "https://github.com/ajdiaz/container-files/blob/master/monerod"
 LABEL org.opencontainers.image.licenses "(GPL-2.0+ OR BSD-3-Clause)"
-LABEL org.opencontainers.image.version "0.16.0.0"
+LABEL org.opencontainers.image.version "0.16.0.1"
 
 ENV LANG C.UTF-8
 
