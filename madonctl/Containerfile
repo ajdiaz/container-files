@@ -1,0 +1,16 @@
+# container-file/madonctl
+# --
+# copyright 2020 Andrés J. Díaz <ajdiaz@ajdiaz.me>
+# distributed under terms of the MIT license.
+
+FROM golang:1.14
+WORKDIR /go/src/github.com/McKael/
+RUN go get -u github.com/McKael/madonctl
+
+FROM debian:10
+LABEL org.opencontainers.image.authors "Andrés J. Díaz <ajdiaz@ajdiaz.me>"
+LABEL org.opencontainers.image.source "https://github.com/ajdiaz/container-files/blob/master/madonctl"
+LABEL org.opencontainers.image.licenses "MIT"
+
+COPY --from=0 /go/bin/madonctl /madonctl
+ENTRYPOINT [ "./madonctl" ]
