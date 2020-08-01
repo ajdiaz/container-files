@@ -1,0 +1,39 @@
+# container-file/monero
+# --
+# copyright 2020 Andrés J. Díaz <ajdiaz@ajdiaz.me>
+# distributed under terms of the MIT license.
+
+FROM debian:10
+
+ENV MONERO_GPGKEY "https://raw.githubusercontent.com/monero-project/monero/master/utils/gpg_keys/binaryfate.asc"
+ENV MONERO_HASHES "https://www.getmonero.org/downloads/hashes.txt"
+ENV MONERO_BINARY "https://downloads.getmonero.org/gui/monero-gui-linux-x64-v0.16.0.2.tar.bz2"
+
+ENV GPGKEY_HASH "7dcb19c87d41a4399b4877054111f7dbfd30531545678bc2be218bd56903904c  binaryfate.asc"
+
+LABEL org.opencontainers.image.authors "Andrés J. Díaz <ajdiaz@ajdiaz.me>"
+LABEL org.opencontainers.image.source "https://github.com/ajdiaz/container-files/blob/master/monero-gui"
+LABEL org.opencontainers.image.licenses "(GPL-2.0+ OR BSD-3-Clause)"
+LABEL org.opencontainers.image.version "0.16.0.0"
+
+ENV LANG C.UTF-8
+
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y \
+    wget gnupg ca-certificates bzip2 \
+    libgl1-mesa-dri libgl1-mesa-glx libglib2.0-0 \
+  && apt-get clean && rm -rf /var/{lib/apt/lists/*,cache/dpkg/*}
+
+RUN wget "$MONERO_GPGKEY" "$MONERO_HASHES" "$MONERO_BINARY" \
+  && echo "$GPGKEY_HASH" | sha256sum -c \
+  && export GNUPGHOME="$(mktemp -d)" \
+  && gpg --import binaryfate.asc \
+  && gpg --verify hashes.txt \
+  && grep monero-gui-linux hashes.txt | sha256sum -c \
+  && tar xvjf monero-gui-*.tar.bz2 --transform 's:^monero-gui.*/:/opt/monero/:' \
+  && rm -rf /monero* /binaryfate.asc hashes.txt "$GNUPGHOME"
+
+WORKDIR /root
+
+ENV  QT_XKB_CONFIG_ROOT "/usr/share/X11/xkb"
+CMD [ "/opt/monero/monero-wallet-gui" ]
