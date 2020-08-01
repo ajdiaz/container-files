@@ -1,0 +1,15 @@
+# container-file/toot
+# --
+# copyright 2020 Andrés J. Díaz <ajdiaz@ajdiaz.me>
+# distributed under terms of the MIT license.
+
+FROM debian:10
+LABEL org.opencontainers.image.authors "Andrés J. Díaz <ajdiaz@ajdiaz.me>"
+LABEL org.opencontainers.image.source "https://github.com/ajdiaz/container-files/blob/master/toot"
+LABEL org.opencontainers.image.licenses "GPL-3.0"
+
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y toot \
+  && apt-get clean && apt-get autoremove --purge -y && rm -rf /var/{lib/apt/lists/*,cache/dpkg/*}
+
+ENTRYPOINT [ "/usr/bin/toot" ]
